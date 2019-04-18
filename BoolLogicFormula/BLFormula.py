@@ -9,7 +9,18 @@ un_tokens = {"!": "obj", }
 
 @Operator
 def imp(arg1, arg2):
+    """
+    Implication operator
 
+    True | imp | True = True
+    True | imp | False = False
+    False | imp | True = True
+    False | imp | False = True
+
+    :param arg1: bool type
+    :param arg2: bool type
+    :return: arg1 implication arg2
+    """
     assert type(arg1) == type(arg2) == bool, 'Implication wrong argument'
 
     if not arg1 or arg2:
@@ -20,11 +31,29 @@ def imp(arg1, arg2):
 
 @Operator
 def obj(arg):
+    """
+    Objection operator
+
+    obj | True = False
+    obj | False = True
+
+    :param arg: bool type
+    :return: objection of arg
+    """
     assert type(arg) == bool, 'Implication wrong argument'
     return not arg
 
 
 class BLFormula:
+    """
+    Implementation of boolean logic formula
+    Allowed operators are implication and objection.
+
+    ((x0 -> (x1 -> x2)) -> ((x0 -> x1) -> (x0 -> x2)))
+    For proper work always use parenthesis around implication '(x0->x1)' and objection '(!x0)'
+
+    Indexation of variable symbols should stars from '0'.
+    """
     def __init__(self, formula, variable_symbol='x', max_var_count=100):
         self.var_s = variable_symbol
         self.len = self._init_len(formula, max_var_count)
@@ -64,6 +93,11 @@ class BLFormula:
         return formula
 
     def is_tautology(self):
+        """
+        Tautology check.
+
+        :return: True - tautology, False - not.
+        """
         pr = product([True, False], repeat=self.len)
         for t in pr:
             if not self(*t):
@@ -74,6 +108,12 @@ class BLFormula:
         return "Formula: {}\n var symbol: {}\n len: {}".format(self.f, self.var_s, self.len)
 
     def __call__(self, *args):
+        """
+        Returns bool function value from the bool values.
+
+        :param args: bool values
+        :return: bool value
+        """
         if len(args) != self.len:
             raise TypeError("Formula takes {} positional argument but {} were given".format(self.len, len(args)))
         temp = self.f
@@ -83,13 +123,5 @@ class BLFormula:
 
 
 if __name__ == '__main__':
-    '''
-    print(True | imp | True) = True
-    print(True | imp | False) = False
-    print(False | imp | True) = True
-    print(False | imp | False) = True
-    print(obj | True) = False
-    print(obj | False) = True
-    '''
     f = BLFormula('(x0 -> (!x0))')
     print(f.is_tautology())

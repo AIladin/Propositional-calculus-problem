@@ -12,10 +12,18 @@ parentheses = {'(', ')'}
 
 
 class WrongExpression(Exception):
+    """
+    Wrong boolean expression exception
+    """
     pass
 
 
-def find_token(expression: str):
+def find_token(expression):
+    """
+    Finds main token in expression
+    :param expression: boolean expression
+    :return: indexes of token
+    """
     if {expression[0], expression[-1]} != parentheses or ('()' in expression):
         raise WrongExpression
     beg = 0
@@ -44,7 +52,12 @@ def find_token(expression: str):
     return beg, end
 
 
-def fin_check(expresion: str):
+def fin_check(expresion):
+    """
+    If after all transformations left only token without variables
+    :param expresion:
+    :return:
+    """
     for token in set(bin_tokens.values()).union(set(un_tokens.values())):
         if token in expresion:
             return False
@@ -52,7 +65,15 @@ def fin_check(expresion: str):
 
 
 def check_correctness(exp):
+    """
+    Gets boolean expression type '(((x1) -> ((x2) -> (x3))) -> (((x1) -> (x2)) -> ((x1) -> (x3))))'
+    with all parentheses and logic operators from dict above.
 
+    Deconstruct expression to analysis tree and check its correctness.
+    Raise WrongExpression when unable to deconstruct.
+    :param exp: string boolean expression
+    :return:
+    """
     def analise(expression):
         """
 

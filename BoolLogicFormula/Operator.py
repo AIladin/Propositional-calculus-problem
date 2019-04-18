@@ -2,6 +2,9 @@ from functools import partial
 
 
 class Operator(object):
+    """
+    'cheat' implementation of custom operators
+    """
     def __init__(self, func):
         self.func = func
 
